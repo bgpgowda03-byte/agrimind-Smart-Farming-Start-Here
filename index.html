@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Field Advisor · Sodic Clay Plateau</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- print-only branding -->
+  <img class="print-watermark" src="logo.jpeg" alt="" aria-hidden="true">
+  <div class="print-corner" aria-hidden="true">
+    <img src="logo.jpeg" alt="">
+    <span>AgriMind · Sodic Clay Plateau</span>
+  </div>
+
+  <div id="scrollbar" aria-hidden="true"></div>
+
+  <!-- ============ INTRO ============ -->
+  <div id="intro" role="dialog" aria-label="Welcome">
+    <canvas id="storm" aria-hidden="true"></canvas>
+    <div id="flash" aria-hidden="true"></div>
+    <div class="scan" aria-hidden="true"></div>
+    <div class="introbox">
+      <img class="intrologo" src="logo.jpeg" alt="" onerror="this.style.display='none'">
+      <div class="hud">// SYSTEM BOOT · AGRIMIND</div>
+      <div id="introTitle" class="introtitle" aria-live="polite"></div>
+      <div id="introSub" class="introsub"></div>
+      <div class="introbar"><span></span></div>
+    </div>
+    <button id="skip" class="skip" type="button">Skip intro</button>
+  </div>
+
+
+  <header class="top">
+    <div class="brand">
+      <img src="logo.jpeg" alt="Field Advisor logo" class="logo" onerror="this.style.display='none'">
+      <div>
+        <strong>AgriMind</strong>
+        <span>Sodic Clay Plateau</span>
+      </div>
+    </div>
+    <nav class="views" aria-label="Views">
+      <button id="v-plan" class="on">Guided plan</button>
+      <button id="v-ask">Ask a question</button>
+      <button id="v-lint">KB check</button>
+    </nav>
+    <div class="kb">
+      <span id="kbstat" class="pill bad">Knowledge base not loaded</span>
+      <button id="reload" class="ghost">Reload</button>
+      <button id="pick" class="ghost">Load kb.json</button>
+      <input type="file" id="file" accept=".json,application/json" hidden>
+    </div>
+  </header>
+
+  <!-- ============ GUIDED PLAN ============ -->
+  <main id="view-plan" class="layout">
+    <aside class="rail" aria-label="Progress">
+      <ol id="rail"></ol>
+    </aside>
+
+    <section class="stage">
+      <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+
+      <!-- Stage 0: input form -->
+      <div id="form" class="pane">
+        <h1>Describe your plot</h1>
+        <p class="lead">Tell us what you see and feel. Add a photo if you have one. The advisor then walks you through
+          the plan one step at a time.</p>
+
+        <div class="grid2">
+          <div>
+            <label for="desc">What do you see, feel, or have already tried?</label>
+            <textarea id="desc"
+              placeholder="Dark heavy soil. Cracks deep in dry weather. After rain the water sits for a day and the top turns hard. Almost nothing grows."></textarea>
+
+            <label>Photo of the plot (optional)</label>
+            <div id="drop" class="drop" tabindex="0" role="button" aria-label="Upload a photo">
+              <div id="dropIdle">
+                <strong>Drop a photo here</strong>
+                <span>or click to choose an image</span>
+              </div>
+              <div id="dropPrev" hidden>
+                <img id="prev" alt="Your uploaded photo">
+                <button type="button" id="rmImg" class="ghost small">Remove photo</button>
+              </div>
+            </div>
+            <input type="file" id="imgfile" accept="image/*" hidden>
+            <p class="hint">The photo is kept with your plan for reference. The advisor reads your text and checks, not
+              the picture, so describe what the photo shows.</p>
+          </div>
+
+          <div>
+            <div class="lab">Signs you can see</div>
+            <div class="chips">
+              <label class="chip"><input type="checkbox" class="sign" value="cracks deep when dry"><span>Cracks deep
+                  when dry</span></label>
+              <label class="chip"><input type="checkbox" class="sign"
+                  value="water sits on the surface for a day or more after rain"><span>Water sits on top for a day or
+                  more</span></label>
+              <label class="chip"><input type="checkbox" class="sign"
+                  value="surface sets hard like a brick when wet"><span>Sets hard like a brick when wet</span></label>
+              <label class="chip"><input type="checkbox" class="sign" value="almost no weeds"><span>Almost no
+                  weeds</span></label>
+              <label class="chip"><input type="checkbox" class="sign" id="white"
+                  value="white crust on the surface"><span>White crust on the surface</span></label>
+              <label class="chip"><input type="checkbox" class="sign" value="dark heavy soil"><span>Dark, heavy
+                  soil</span></label>
+              <label class="chip"><input type="checkbox" class="sign"
+                  value="paler soil that still seals over"><span>Paler soil that still seals over</span></label>
+            </div>
+
+            <div class="grid2 tight">
+              <div>
+                <label for="crumb">Crumb check</label>
+                <select id="crumb">
+                  <option value="">Not done yet</option>
+                  <option value="fall">Crumb falls apart, water turns cloudy</option>
+                  <option value="whole">Crumb stays whole</option>
+                </select>
+              </div>
+              <div>
+                <label for="plate">Plate check on the water</label>
+                <select id="plate">
+                  <option value="">Not done yet</option>
+                  <option value="film">White film is left</option>
+                  <option value="none">No film left</option>
+                </select>
+              </div>
+              <div>
+                <label for="hole">Drainage hole</label>
+                <select id="hole">
+                  <option value="">Not done yet</option>
+                  <option value="slow">Drains very slowly</option>
+                  <option value="ok">Drains in a reasonable time</option>
+                </select>
+              </div>
+              <div>
+                <label for="water">Water source</label>
+                <select id="water">
+                  <option value="">Unknown</option>
+                  <option value="near">Nearby, quality unknown</option>
+                  <option value="none">No visible water source</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p id="formErr" class="err" hidden>Add a description, a photo, or tick at least one sign to continue.</p>
+        <div class="actions"><button id="start" class="primary">Start analysis</button></div>
+      </div>
+
+      <!-- Stages 1-10: one step at a time -->
+      <div id="step" class="pane" hidden></div>
+
+      <footer id="nav" class="nav" hidden>
+        <button id="back" class="ghost">Back</button>
+        <button id="edit" class="ghost">Edit my inputs</button>
+        <span class="grow"></span>
+        <button id="print" class="ghost" hidden>Print plan</button>
+        <button id="restart" class="ghost" hidden>Start over</button>
+        <button id="next" class="primary">Next</button>
+      </footer>
+    </section>
+  </main>
+
+  <!-- ============ ASK ============ -->
+  <main id="view-ask" class="single" hidden>
+    <div class="pane">
+      <h1>Ask a question</h1>
+      <p class="lead">Answers are taken straight from the knowledge base. If it is not there, the advisor says so.</p>
+      <div class="askrow">
+        <input type="text" id="q" placeholder="Ask about this plot…" aria-label="Your question">
+        <button id="ask" class="primary">Ask</button>
+      </div>
+      <div id="ans"></div>
+    </div>
+  </main>
+
+  <!-- ============ KB CHECK ============ -->
+  <main id="view-lint" class="single" hidden>
+    <div class="pane" id="lint"></div>
+  </main>
+
+  <script src="kb.js" onerror="void 0"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
